@@ -150,6 +150,17 @@
             <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-gold-500/50 rounded-bl-3xl opacity-50 m-2"></div>
             <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-gold-500/50 rounded-br-3xl opacity-50 m-2"></div>
 
+            <!-- Avatar/Hình ảnh cá nhân -->
+            <div class="relative w-36 h-36 mx-auto mb-6">
+                <!-- Vòng sáng quay quanh Avatar -->
+                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-gold-600 via-yellow-200 to-black animate-spin" style="animation-duration: 4s;"></div>
+                <!-- Container Ảnh -->
+                <div class="absolute inset-1 rounded-full bg-black overflow-hidden border-2 border-black z-10 flex items-center justify-center group cursor-pointer">
+                    <!-- CHỦ TỊCH THAY LINK ẢNH VÀO THUỘC TÍNH SRC DƯỚI ĐÂY -->
+                    <img src="https://placehold.co/400x400/1a1a1a/EAB308?text=Anh+Chủ+Tịch" alt="Võ Minh Nhật Avatar" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+            </div>
+
             <!-- Crown Icon -->
             <div class="text-gold-400 text-4xl mb-4">
                 <i class="fas fa-crown"></i>
@@ -199,19 +210,37 @@
                     Zalo: 099999999
                 </a>
                 
+                <!-- CHỦ TỊCH THAY LINK FACEBOOK VÀO THUỘC TÍNH HREF DƯỚI ĐÂY KHI CÓ -->
                 <a href="#" target="_blank" id="fb-link" class="btn-gold w-full sm:w-auto px-8 py-4 rounded-full flex items-center justify-center gap-3 text-gold-300 font-semibold group cursor-pointer" onclick="showMsg('Vui lòng cung cấp Link Facebook để cập nhật!')">
                     <i class="fab fa-facebook-f text-xl group-hover:text-gold-200 transition"></i>
                     Facebook Chí Tôn
                 </a>
             </div>
 
+            <!-- Hồ Sơ Độc Quyền (PDF) -->
+            <div class="mt-12 pt-8 border-t border-gold-500/20">
+                <h3 class="font-luxury text-gold-300 mb-6 uppercase tracking-widest text-sm">Hồ Sơ Năng Lực Cấp Cao</h3>
+                <div class="w-full max-w-3xl mx-auto h-[500px] border border-gold-500/30 rounded-xl overflow-hidden glass-panel relative group shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                    <!-- CHỦ TỊCH THAY LINK PDF VÀO PHÍA SAU ĐOẠN 'url=' CỦA THUỘC TÍNH SRC DƯỚI ĐÂY -->
+                    <iframe src="https://docs.google.com/viewer?url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" class="w-full h-full absolute inset-0" frameborder="0"></iframe>
+                    
+                    <!-- Lớp overlay mờ để hướng dẫn -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/70 opacity-100 group-hover:opacity-0 transition-opacity duration-500">
+                        <p class="text-gold-200 text-sm px-6 text-center bg-black/90 py-3 rounded-lg border border-gold-500/50 backdrop-blur-md">
+                            <i class="fas fa-file-pdf mr-2"></i> Rê chuột vào để xem nội dung PDF
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- QR Transfer Placeholder -->
             <div class="mt-12 pt-8 border-t border-gold-500/20">
                 <h3 class="font-luxury text-gold-300 mb-6 uppercase tracking-widest text-sm">Cổng Giao Dịch Đặc Quyền</h3>
-                <div class="inline-block p-1 rounded-2xl bg-gradient-to-br from-gold-400 via-yellow-600 to-black">
-                    <div class="bg-black/90 p-8 rounded-xl backdrop-blur-sm border border-black flex flex-col items-center justify-center min-w-[250px] min-h-[250px] cursor-pointer hover:bg-black/70 transition" onclick="showMsg('Mã QR Chuyển Tiền sẽ được bổ sung theo lệnh của Chủ Tịch.')">
-                        <i class="fas fa-qrcode text-6xl text-gold-500/50 mb-4"></i>
-                        <p class="text-gold-400/70 text-sm font-medium">QR CODE ĐANG CHỜ CẬP NHẬT</p>
+                <div class="inline-block p-1 rounded-2xl bg-gradient-to-br from-gold-400 via-yellow-600 to-black hover:scale-105 transition-transform duration-300">
+                    <div class="bg-black/90 p-4 rounded-xl backdrop-blur-sm border border-black flex flex-col items-center justify-center w-[250px] h-[250px] cursor-pointer">
+                        <!-- CHỦ TỊCH THAY LINK ẢNH QR VÀO THUỘC TÍNH SRC DƯỚI ĐÂY -->
+                        <img src="https://placehold.co/400x400/0a0a0a/EAB308?text=QR+Code+Here" alt="Mã QR Chuyển Tiền" class="w-full h-full object-contain rounded-lg">
+                        <p class="text-gold-400/70 text-xs font-medium mt-3 uppercase tracking-wider">Quét Mã QR Chuyển Tiền</p>
                     </div>
                 </div>
             </div>
