@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Võ Minh Nhật | Tổng Tài Tập Đoàn Võ Thị</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Thẻ danh thiếp điện tử chính thức của Tổng tài Võ Minh Nhật - Tập đoàn Võ Thị.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D Bling Bling Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'luxury': ['Cinzel', 'serif'],
+                        'body': ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            300: '#FDE047',
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                            700: '#A16207',
+                        }
+                    },
+                    animation: {
+                        'shine': 'shine 3s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        shine: {
+                            '0%': { backgroundPosition: '200% center' },
+                            '100%': { backgroundPosition: '-200% center' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #050505;
+            color: #ffffff;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(234, 179, 8, 0.05);
+        }
+
+        .gold-text-gradient {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .btn-gold {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-25deg);
+            transition: all 0.5s;
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+            border-color: rgba(234, 179, 8, 1);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold:hover::before {
+            left: 200%;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #BF953F; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FBF5B7; 
+        }
+    </style>
+</head>
+<body class="font-body antialiased selection:bg-gold-500 selection:text-black">
+
+    <!-- 3D Background Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 py-12 md:py-20">
+        
+        <!-- Identity Card -->
+        <div class="glass-panel rounded-3xl p-8 md:p-12 max-w-4xl w-full text-center animate-float relative overflow-hidden">
+            <!-- Decorative corners -->
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-gold-500/50 rounded-tl-3xl opacity-50 m-2"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gold-500/50 rounded-tr-3xl opacity-50 m-2"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-gold-500/50 rounded-bl-3xl opacity-50 m-2"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-gold-500/50 rounded-br-3xl opacity-50 m-2"></div>
+
+            <!-- Crown Icon -->
+            <div class="text-gold-400 text-4xl mb-4">
+                <i class="fas fa-crown"></i>
+            </div>
+
+            <!-- Name -->
+            <h1 class="font-luxury text-5xl md:text-7xl font-bold mb-2 tracking-wider gold-text-gradient animate-shine">
+                VÕ MINH NHẬT
+            </h1>
+            
+            <!-- Title -->
+            <h2 class="text-lg md:text-xl text-gold-300/80 uppercase tracking-[0.3em] mb-10 font-semibold">
+                Tổng Tài Tập Đoàn Võ Thị
+            </h2>
+
+            <!-- Power Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-left">
+                <div class="glass-panel p-6 rounded-2xl border border-gold-600/30 hover:border-gold-400/60 transition duration-300">
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-gold-900/40 flex items-center justify-center text-gold-400 text-xl border border-gold-500/30">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="font-luxury text-xl font-bold text-gold-200">Năng Lực Chí Tôn</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Thấu hiểu vạn vật. Thông thạo tất cả mọi kỹ năng trên cuộc đời này đạt đến cảnh giới <strong>Chí Tôn</strong> chỉ sau đúng 24 tiếng đồng hồ.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-gold-600/30 hover:border-gold-400/60 transition duration-300">
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-gold-900/40 flex items-center justify-center text-gold-400 text-xl border border-gold-500/30">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                        <h3 class="font-luxury text-xl font-bold text-gold-200">Ngôn Ngữ Toàn Cầu</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Làm chủ và giao tiếp trôi chảy <strong>135 ngôn ngữ</strong> khác nhau, bao phủ toàn diện <strong>185 quốc gia và vùng lãnh thổ</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://zalo.me/099999999" target="_blank" class="btn-gold w-full sm:w-auto px-8 py-4 rounded-full flex items-center justify-center gap-3 text-gold-300 font-semibold group cursor-pointer">
+                    <i class="fas fa-comment-dots text-xl group-hover:text-gold-200 transition"></i>
+                    Zalo: 099999999
+                </a>
+                
+                <a href="#" target="_blank" id="fb-link" class="btn-gold w-full sm:w-auto px-8 py-4 rounded-full flex items-center justify-center gap-3 text-gold-300 font-semibold group cursor-pointer" onclick="showMsg('Vui lòng cung cấp Link Facebook để cập nhật!')">
+                    <i class="fab fa-facebook-f text-xl group-hover:text-gold-200 transition"></i>
+                    Facebook Chí Tôn
+                </a>
+            </div>
+
+            <!-- QR Transfer Placeholder -->
+            <div class="mt-12 pt-8 border-t border-gold-500/20">
+                <h3 class="font-luxury text-gold-300 mb-6 uppercase tracking-widest text-sm">Cổng Giao Dịch Đặc Quyền</h3>
+                <div class="inline-block p-1 rounded-2xl bg-gradient-to-br from-gold-400 via-yellow-600 to-black">
+                    <div class="bg-black/90 p-8 rounded-xl backdrop-blur-sm border border-black flex flex-col items-center justify-center min-w-[250px] min-h-[250px] cursor-pointer hover:bg-black/70 transition" onclick="showMsg('Mã QR Chuyển Tiền sẽ được bổ sung theo lệnh của Chủ Tịch.')">
+                        <i class="fas fa-qrcode text-6xl text-gold-500/50 mb-4"></i>
+                        <p class="text-gold-400/70 text-sm font-medium">QR CODE ĐANG CHỜ CẬP NHẬT</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-600 text-sm">
+            <p>&copy; 2026 Bản quyền thuộc về Tập Đoàn Võ Thị. Mọi sự sao chép đều phải trả giá.</p>
+        </footer>
+
+        <!-- Custom Alert Modal -->
+        <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="glass-panel p-8 rounded-2xl max-w-sm w-full mx-4 border-gold-500/50 text-center transform scale-95 transition-transform duration-300" id="modal-content">
+                <i class="fas fa-info-circle text-4xl text-gold-400 mb-4"></i>
+                <p id="modal-text" class="text-gray-200 mb-6 font-medium"></p>
+                <button onclick="closeMsg()" class="btn-gold px-6 py-2 rounded-full text-gold-300 text-sm w-full font-semibold">Đã rõ thưa Chủ Tịch</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Three.js Bling Bling Animation Logic -->
+    <script>
+        // Custom message box logic (Replacing alert)
+        const modal = document.getElementById('custom-modal');
+        const modalText = document.getElementById('modal-text');
+        const modalContent = document.getElementById('modal-content');
+
+        function showMsg(message) {
+            modalText.innerText = message;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }
+
+        function closeMsg() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+        }
+
+        // Three.js Setup
+        window.onload = function() {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            
+            // Camera
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 50;
+
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 700;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                // Spread particles across the screen
+                posArray[i] = (Math.random() - 0.5) * 200;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            // Create a glowing gold material
+            const material = new THREE.PointsMaterial({
+                size: 0.3,
+                color: 0xEAB308, // Tailwind yellow-500
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            // Mouse interaction setup
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            });
+
+            // Animation Loop
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                const elapsedTime = clock.getElapsedTime();
+
+                // Rotate particles slowly
+                particlesMesh.rotation.y = -0.05 * elapsedTime;
+                particlesMesh.rotation.x = -0.02 * elapsedTime;
+
+                // Make particles wave slightly
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+                
+                particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+                particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            // Resize handling
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+    </script>
+</body>
+</html>
