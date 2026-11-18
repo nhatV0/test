@@ -150,14 +150,24 @@
             <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-gold-500/50 rounded-bl-3xl opacity-50 m-2"></div>
             <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-gold-500/50 rounded-br-3xl opacity-50 m-2"></div>
 
-            <!-- Avatar/Hình ảnh cá nhân -->
+            <!-- =========================================================================
+                 [VỊ TRÍ 1: ẢNH ĐẠI DIỆN (AVATAR)]
+                 - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px hoặc 800x800px).
+                 - Cách tải lên GitHub: Tạo thư mục "images" -> tải ảnh lên với tên "avatar.jpg"
+                   (Lưu ý: Viết thường không dấu, đúng đuôi file .jpg hoặc .png).
+                 - Nếu dùng link ảnh online trực tiếp, thay toàn bộ "images/avatar.jpg" bằng URL đó.
+            ========================================================================== -->
             <div class="relative w-36 h-36 mx-auto mb-6">
                 <!-- Vòng sáng quay quanh Avatar -->
                 <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-gold-600 via-yellow-200 to-black animate-spin" style="animation-duration: 4s;"></div>
                 <!-- Container Ảnh -->
                 <div class="absolute inset-1 rounded-full bg-black overflow-hidden border-2 border-black z-10 flex items-center justify-center group cursor-pointer">
-                    <!-- CHỦ TỊCH THAY LINK ẢNH VÀO THUỘC TÍNH SRC DƯỚI ĐÂY -->
-                    <img src="https://placehold.co/400x400/1a1a1a/EAB308?text=Anh+Chủ+Tịch" alt="Võ Minh Nhật Avatar" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img 
+                        src="images/avatar.jpg" 
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x400/1a1a1a/EAB308?text=Chua+Co+Avatar';" 
+                        alt="Võ Minh Nhật Avatar" 
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    >
                 </div>
             </div>
 
@@ -233,13 +243,23 @@
                 </div>
             </div>
 
-            <!-- QR Transfer Placeholder -->
+            <!-- =========================================================================
+                 [VỊ TRÍ 2: MÃ QR CHUYỂN TIỀN]
+                 - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px, nên cắt gọn viền mã QR để dễ quét).
+                 - Cách tải lên GitHub: Tải ảnh vào thư mục "images" với tên "qr-chuyen-tien.png"
+                   (Lưu ý: Viết thường không dấu, đúng đuôi file .png hoặc .jpg).
+                 - Nếu dùng link ảnh online trực tiếp, thay toàn bộ "images/qr-chuyen-tien.png" bằng URL đó.
+            ========================================================================== -->
             <div class="mt-12 pt-8 border-t border-gold-500/20">
                 <h3 class="font-luxury text-gold-300 mb-6 uppercase tracking-widest text-sm">Cổng Giao Dịch Đặc Quyền</h3>
                 <div class="inline-block p-1 rounded-2xl bg-gradient-to-br from-gold-400 via-yellow-600 to-black hover:scale-105 transition-transform duration-300">
                     <div class="bg-black/90 p-4 rounded-xl backdrop-blur-sm border border-black flex flex-col items-center justify-center w-[250px] h-[250px] cursor-pointer">
-                        <!-- CHỦ TỊCH THAY LINK ẢNH QR VÀO THUỘC TÍNH SRC DƯỚI ĐÂY -->
-                        <img src="https://placehold.co/400x400/0a0a0a/EAB308?text=QR+Code+Here" alt="Mã QR Chuyển Tiền" class="w-full h-full object-contain rounded-lg">
+                        <img 
+                            src="images/qr-chuyen-tien.png" 
+                            onerror="this.onerror=null; this.src='https://placehold.co/400x400/0a0a0a/EAB308?text=Chua+Co+Ma+QR';" 
+                            alt="Mã QR Chuyển Tiền" 
+                            class="w-full h-full object-contain rounded-lg"
+                        >
                         <p class="text-gold-400/70 text-xs font-medium mt-3 uppercase tracking-wider">Quét Mã QR Chuyển Tiền</p>
                     </div>
                 </div>
