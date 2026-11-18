@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Võ Minh Nhật | Tổng Tài Tập Đoàn Võ Thị</title>
+    <title>Võ Minh Nhật | Tổng Tài Tập Đoàn Võ Thị - Kiếm Thánh Chí Tôn</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Thẻ danh thiếp điện tử chính thức của Tổng tài Võ Minh Nhật - Tập đoàn Võ Thị.">
@@ -17,7 +17,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Three.js for 3D Bling Bling Effect -->
+    <!-- Three.js for 3D Bling Bling & Sword Aura Effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
@@ -41,7 +41,7 @@
                     animation: {
                         'shine': 'shine 4s linear infinite',
                         'float-slow': 'float 5s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'spin-slow': 'spin 5s linear infinite',
                     },
                     keyframes: {
                         shine: {
@@ -51,10 +51,6 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-6px)' },
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 25px rgba(234, 179, 8, 0.2)' },
-                            '50%': { boxShadow: '0 0 45px rgba(234, 179, 8, 0.45)' },
                         }
                     }
                 }
@@ -66,289 +62,414 @@
         body {
             margin: 0;
             overflow-x: hidden;
-            background-color: #050505;
+            background-color: #040406;
             color: #ffffff;
         }
         
-        #canvas-container {
+        #canvas-container, #sword-trail-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
             pointer-events: none;
+            transition: opacity 0.6s ease;
         }
 
-        /* Thẻ kính cao cấp có chiều sâu tốt hơn */
+        #canvas-container { z-index: 0; }
+        #sword-trail-canvas { z-index: 40; }
+
+        /* Hào quang 7 sắc cầu vồng luân chuyển */
+        @keyframes rainbowFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes sacredPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 25px rgba(255, 0, 128, 0.25),
+                    0 0 45px rgba(255, 215, 0, 0.25),
+                    0 0 65px rgba(0, 229, 255, 0.2),
+                    inset 0 0 25px rgba(255, 215, 0, 0.1);
+            }
+            50% {
+                box-shadow: 
+                    0 0 35px rgba(0, 255, 170, 0.35),
+                    0 0 60px rgba(255, 215, 0, 0.4),
+                    0 0 90px rgba(138, 43, 226, 0.3),
+                    inset 0 0 35px rgba(255, 255, 255, 0.12);
+            }
+        }
+
+        /* Vệt kiếm thánh chém ngang thẻ */
+        @keyframes swordSlash {
+            0%, 72% {
+                transform: translateX(-160%) rotate(-32deg);
+                opacity: 0;
+            }
+            76% {
+                opacity: 1;
+            }
+            88% {
+                transform: translateX(260%) rotate(-32deg);
+                opacity: 0.9;
+            }
+            92%, 100% {
+                transform: translateX(260%) rotate(-32deg);
+                opacity: 0;
+            }
+        }
+
+        /* Thẻ kính Kiếm Thánh */
         .glass-card {
-            background: linear-gradient(160deg, rgba(18, 18, 18, 0.82) 0%, rgba(8, 8, 8, 0.92) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(234, 179, 8, 0.28);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 240, 150, 0.15);
+            background: linear-gradient(160deg, rgba(16, 16, 22, 0.85) 0%, rgba(6, 6, 10, 0.94) 100%);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            animation: sacredPulse 5s ease-in-out infinite;
+            transition: all 0.5s ease;
+        }
+
+        /* Viền hào quang 7 sắc ngoài cùng của thẻ */
+        .rainbow-border-wrap {
+            position: relative;
+            padding: 2px;
+            border-radius: 1.55rem;
+            background: linear-gradient(120deg, #ff2a5f, #ff8c00, #ffd700, #00e676, #00e5ff, #651fff, #ff2a5f);
+            background-size: 300% 300%;
+            animation: rainbowFlow 6s ease infinite;
+            transition: all 0.5s ease;
+        }
+
+        /* Vòng hào quang Avatar 7 sắc */
+        .rainbow-avatar-ring {
+            background: conic-gradient(
+                from 0deg,
+                #ff004c,
+                #ff7b00,
+                #ffe600,
+                #00ff88,
+                #00d9ff,
+                #7b2cbf,
+                #ff004c
+            );
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.65));
+        }
+
+        /* Chữ Kiếm Thánh Vàng Kim + Ánh Cầu Vồng */
+        .sacred-title-gradient {
+            background: linear-gradient(90deg, #BF953F, #FFF8C9, #00F0FF, #FF6EC7, #FFD700, #AA771C);
+            background-size: 250% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.35));
+        }
+
+        /* Luồng kiếm khí chém qua thẻ */
+        .sword-slash-beam {
+            position: absolute;
+            top: -50%;
+            left: 0;
+            width: 90px;
+            height: 220%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 0, 128, 0.25) 20%,
+                rgba(0, 240, 255, 0.55) 45%,
+                rgba(255, 255, 255, 0.95) 50%,
+                rgba(255, 215, 0, 0.55) 55%,
+                rgba(138, 43, 226, 0.25) 80%,
+                transparent 100%
+            );
+            filter: blur(2px);
+            pointer-events: none;
+            z-index: 30;
+            animation: swordSlash 5.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
         }
 
         .glass-subpanel {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(234, 179, 8, 0.18);
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(234, 179, 8, 0.22);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-subpanel:hover {
-            background: rgba(234, 179, 8, 0.05);
-            border-color: rgba(234, 179, 8, 0.55);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 229, 255, 0.65);
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(234, 179, 8, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15), 0 0 20px rgba(255, 215, 0, 0.15);
         }
 
-        .gold-text-gradient {
-            background: linear-gradient(to right, #BF953F, #FCF6BA, #D4AF37, #FBF5B7, #AA771C);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        /* Nút chính nổi bật */
         .btn-gold-primary {
             position: relative;
-            background: linear-gradient(135deg, #D4AF37 0%, #AA771C 100%);
+            background: linear-gradient(135deg, #FDE047 0%, #D4AF37 50%, #AA771C 100%);
             color: #050505;
             font-weight: 700;
             transition: all 0.3s ease;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 22px rgba(234, 179, 8, 0.4);
         }
 
         .btn-gold-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(234, 179, 8, 0.55);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.7), 0 0 40px rgba(0, 229, 255, 0.35);
             filter: brightness(1.08);
         }
 
-        /* Nút viền vàng sang trọng */
         .btn-gold-outline {
             position: relative;
-            background: rgba(15, 15, 15, 0.8);
+            background: rgba(15, 15, 20, 0.85);
             border: 1px solid rgba(234, 179, 8, 0.45);
             transition: all 0.3s ease;
             overflow: hidden;
         }
 
-        .btn-gold-outline::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.12), transparent);
-            transform: skewX(-25deg);
-            transition: all 0.6s;
-        }
-
         .btn-gold-outline:hover {
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
-            border-color: rgba(234, 179, 8, 0.95);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 0 20px rgba(234, 179, 8, 0.35);
+            border-color: rgba(255, 255, 255, 0.85);
             transform: translateY(-2px);
-            background: rgba(234, 179, 8, 0.08);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .btn-gold-outline:hover::before {
-            left: 200%;
-        }
-
-        /* Đường kẻ phân cách tinh tế */
-        .divider-gold {
+        .divider-rainbow {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.4), transparent);
+            background: linear-gradient(90deg, transparent, #ff2a5f, #ffd700, #00e5ff, #7b2cbf, transparent);
+            opacity: 0.65;
         }
-        
+
+        /* =========================================================
+           TRẠNG THÁI "ẨN BÁ KHÍ" (Thu liễm hào quang, trầm ổn nội liễm)
+        ========================================================== */
+        body.aura-hidden #canvas-container,
+        body.aura-hidden #sword-trail-canvas,
+        body.aura-hidden .sword-slash-beam,
+        body.aura-hidden .aura-only {
+            opacity: 0 !important;
+            visibility: hidden;
+        }
+
+        body.aura-hidden .rainbow-border-wrap {
+            background: rgba(234, 179, 8, 0.25);
+            animation: none;
+        }
+
+        body.aura-hidden .glass-card {
+            animation: none;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        body.aura-hidden .rainbow-avatar-ring {
+            background: linear-gradient(135deg, #CA8A04, #422006);
+            filter: none;
+            animation: none;
+        }
+
+        body.aura-hidden .sacred-title-gradient {
+            background: linear-gradient(to right, #BF953F, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: none;
+            animation: none;
+        }
+
         /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #BF953F; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #FBF5B7; 
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(#BF953F, #00e5ff); border-radius: 4px; }
     </style>
 </head>
 <body class="font-body antialiased selection:bg-gold-500 selection:text-black">
 
-    <!-- 3D Background Canvas -->
+    <!-- 3D Kiếm Quang & Tinh Tú Canvas -->
     <div id="canvas-container"></div>
 
+    <!-- Canvas Vệt Kiếm Thánh 7 Sắc theo chuột / chạm -->
+    <canvas id="sword-trail-canvas"></canvas>
+
+    <!-- Nút Thu Liễm / Bùng Nổ Bá Khí (Góc trên bên phải) -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="aura-toggle-btn" onclick="toggleAura()" class="px-4 py-2 rounded-full bg-black/80 backdrop-blur-md border border-gold-500/50 text-xs sm:text-sm font-semibold text-gold-300 hover:border-cyan-400 hover:text-white transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] flex items-center gap-2 cursor-pointer">
+            <i id="aura-icon" class="fas fa-khanda text-cyan-400"></i>
+            <span id="aura-label">Bá Khí: BẬT</span>
+        </button>
+    </div>
+
     <!-- Main Content -->
-    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-10 md:py-16">
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12 md:py-16">
         
-        <!-- Identity Card -->
-        <div class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 max-w-4xl w-full text-center relative overflow-hidden">
-            
-            <!-- Ánh hào quang nền nhẹ phía trên -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-gold-500/15 blur-[80px] pointer-events-none"></div>
-
-            <!-- Decorative corners -->
-            <div class="absolute top-0 left-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-gold-500/40 rounded-tl-3xl m-2.5 pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-r-2 border-gold-500/40 rounded-tr-3xl m-2.5 pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-gold-500/40 rounded-bl-3xl m-2.5 pointer-events-none"></div>
-            <div class="absolute bottom-0 right-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-gold-500/40 rounded-br-3xl m-2.5 pointer-events-none"></div>
-
-            <!-- =========================================================================
-                 [VỊ TRÍ 1: ẢNH ĐẠI DIỆN (AVATAR)]
-                 - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px hoặc 800x800px).
-                 - Cách tải lên GitHub: Tạo thư mục "images" -> tải ảnh lên với tên "avatar.jpg"
-                   (Lưu ý: Viết thường không dấu, đúng đuôi file .jpg hoặc .png).
-            ========================================================================== -->
-            <div class="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-5 animate-float-slow">
-                <!-- Vòng sáng xoay quanh Avatar -->
-                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-gold-600 via-yellow-200 to-amber-900 animate-spin" style="animation-duration: 6s;"></div>
-                <!-- Container Ảnh -->
-                <div class="absolute inset-[3px] rounded-full bg-[#0a0a0a] overflow-hidden border-2 border-black z-10 flex items-center justify-center group">
-                    <img 
-                        src="images/avatar.jpg" 
-                        onerror="this.onerror=null; this.src='https://placehold.co/400x400/121212/EAB308?text=Avatar+Chu+Tich';" 
-                        alt="Võ Minh Nhật Avatar" 
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    >
-                </div>
-                <!-- Huy hiệu vương miện đính dưới Avatar -->
-                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 z-20 bg-[#0d0d0d] border border-gold-500/60 px-3 py-0.5 rounded-full shadow-lg">
-                    <i class="fas fa-crown text-gold-400 text-sm"></i>
-                </div>
-            </div>
-
-            <!-- Name -->
-            <h1 class="font-luxury text-3xl sm:text-5xl md:text-6xl font-black mt-4 mb-2 tracking-wider gold-text-gradient animate-shine leading-tight">
-                VÕ MINH NHẬT
-            </h1>
-            
-            <!-- Title Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/25 mb-8">
-                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
-                <h2 class="text-xs sm:text-sm text-gold-300 uppercase tracking-[0.25em] font-semibold">
-                    Tổng Tài Tập Đoàn Võ Thị
-                </h2>
-            </div>
-
-            <!-- Action Buttons (Đưa lên trên để khách truy cập liên hệ ngay không cần cuộn) -->
-            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-10">
-                <!-- Nút Zalo Chính -->
-                <a href="https://zalo.me/099999999" target="_blank" class="btn-gold-primary w-full sm:w-auto px-7 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-sm sm:text-base cursor-pointer">
-                    <i class="fas fa-comment-dots text-lg"></i>
-                    <span>Kết Nối Zalo</span>
-                </a>
-
-                <!-- Nút Sao Chép SĐT nhanh (UX tiện lợi trên máy tính) -->
-                <button onclick="copyPhone('099999999')" class="btn-gold-outline w-full sm:w-auto px-6 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-gold-200 text-sm sm:text-base font-medium cursor-pointer">
-                    <i class="far fa-copy text-gold-400"></i>
-                    <span>0999.999.99</span>
-                </button>
+        <!-- Viền Hào Quang 7 Sắc Cầu Vồng -->
+        <div class="rainbow-border-wrap max-w-4xl w-full">
+            <!-- Identity Card -->
+            <div class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 w-full text-center relative overflow-hidden">
                 
-                <!-- CHỦ TỊCH THAY LINK FACEBOOK VÀO THUỘC TÍNH HREF DƯỚI ĐÂY KHI CÓ -->
-                <a href="#" target="_blank" id="fb-link" class="btn-gold-outline w-full sm:w-auto px-7 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-gold-200 text-sm sm:text-base font-medium cursor-pointer" onclick="event.preventDefault(); showMsg('Vui lòng cập nhật đường dẫn Facebook của Chủ Tịch vào thẻ #fb-link!')">
-                    <i class="fab fa-facebook-f text-gold-400"></i>
-                    <span>Facebook Chí Tôn</span>
-                </a>
-            </div>
+                <!-- Luồng Kiếm Thánh Chém Ngang Thẻ -->
+                <div class="sword-slash-beam"></div>
 
-            <!-- Power Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12 text-left">
-                <div class="glass-subpanel p-6 rounded-2xl">
-                    <div class="flex items-center gap-4 mb-3">
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-500/20 to-gold-900/30 flex items-center justify-center text-gold-400 text-lg border border-gold-500/30 shrink-0">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h3 class="font-luxury text-lg sm:text-xl font-bold text-gold-200">Năng Lực Chí Tôn</h3>
+                <!-- Hào quang 7 sắc tỏa từ đỉnh thẻ -->
+                <div class="aura-only absolute -top-28 left-1/2 -translate-x-1/2 w-[500px] h-56 bg-gradient-to-r from-pink-500/20 via-amber-400/25 to-cyan-400/20 blur-[90px] pointer-events-none transition-opacity duration-500"></div>
+
+                <!-- Decorative corners -->
+                <div class="absolute top-0 left-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-gold-400/60 rounded-tl-3xl m-2.5 pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-r-2 border-cyan-400/60 rounded-tr-3xl m-2.5 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-cyan-400/60 rounded-bl-3xl m-2.5 pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-gold-400/60 rounded-br-3xl m-2.5 pointer-events-none"></div>
+
+                <!-- =========================================================================
+                     [VỊ TRÍ 1: ẢNH ĐẠI DIỆN (AVATAR)]
+                     - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px hoặc 800x800px).
+                     - Cách tải lên GitHub: Tạo thư mục "images" -> tải ảnh lên với tên "avatar.jpg"
+                       (Lưu ý: Viết thường không dấu, đúng đuôi file .jpg hoặc .png).
+                ========================================================================== -->
+                <div class="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-5 animate-float-slow">
+                    <!-- Tầng hào quang 7 sắc tỏa mờ phía sau -->
+                    <div class="aura-only absolute -inset-3 rounded-full rainbow-avatar-ring opacity-45 blur-md animate-spin-slow"></div>
+                    <!-- Vòng sáng 7 sắc xoay quanh Avatar -->
+                    <div class="absolute inset-0 rounded-full rainbow-avatar-ring animate-spin" style="animation-duration: 4s;"></div>
+                    <!-- Container Ảnh -->
+                    <div class="absolute inset-[3px] rounded-full bg-[#0a0a0a] overflow-hidden border-2 border-black z-10 flex items-center justify-center group">
+                        <img 
+                            src="images/avatar.jpg" 
+                            onerror="this.onerror=null; this.src='https://placehold.co/400x400/121212/EAB308?text=Avatar+Chu+Tich';" 
+                            alt="Võ Minh Nhật Avatar" 
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        >
                     </div>
-                    <p class="text-gray-300/90 text-sm leading-relaxed">
-                        Thấu hiểu vạn vật. Thông thạo tất cả mọi kỹ năng trên cuộc đời này đạt đến cảnh giới <strong class="text-gold-300">Chí Tôn</strong> chỉ sau đúng 24 tiếng đồng hồ.
-                    </p>
+                    <!-- Huy hiệu Vương Miện & Kiếm Thánh -->
+                    <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 z-20 bg-[#0d0d12] border border-gold-400/80 px-3.5 py-0.5 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.5)] flex items-center gap-1.5">
+                        <i class="fas fa-crown text-gold-400 text-xs"></i>
+                        <span class="text-[10px] font-bold tracking-widest text-cyan-300 uppercase">Kiếm Thánh</span>
+                    </div>
                 </div>
 
-                <div class="glass-subpanel p-6 rounded-2xl">
-                    <div class="flex items-center gap-4 mb-3">
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-500/20 to-gold-900/30 flex items-center justify-center text-gold-400 text-lg border border-gold-500/30 shrink-0">
-                            <i class="fas fa-globe-asia"></i>
-                        </div>
-                        <h3 class="font-luxury text-lg sm:text-xl font-bold text-gold-200">Ngôn Ngữ Toàn Cầu</h3>
-                    </div>
-                    <p class="text-gray-300/90 text-sm leading-relaxed">
-                        Làm chủ và giao tiếp trôi chảy <strong class="text-gold-300">135 ngôn ngữ</strong> khác nhau, bao phủ toàn diện <strong class="text-gold-300">185 quốc gia và vùng lãnh thổ</strong>.
-                    </p>
+                <!-- Name -->
+                <h1 class="font-luxury text-3xl sm:text-5xl md:text-6xl font-black mt-5 mb-2 tracking-wider sacred-title-gradient animate-shine leading-tight">
+                    VÕ MINH NHẬT
+                </h1>
+                
+                <!-- Title Badge -->
+                <div class="inline-flex items-center gap-2.5 px-5 py-1.5 rounded-full bg-gradient-to-r from-pink-500/10 via-gold-500/15 to-cyan-500/10 border border-gold-400/35 mb-8">
+                    <i class="fas fa-khanda text-gold-400 text-xs"></i>
+                    <h2 class="text-xs sm:text-sm text-gold-200 uppercase tracking-[0.25em] font-semibold">
+                        Tổng Tài Tập Đoàn Võ Thị
+                    </h2>
+                    <i class="fas fa-khanda text-cyan-400 text-xs transform scale-x-[-1]"></i>
                 </div>
-            </div>
 
-            <div class="divider-gold my-10"></div>
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-10">
+                    <a href="https://zalo.me/099999999" target="_blank" class="btn-gold-primary w-full sm:w-auto px-7 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-sm sm:text-base cursor-pointer">
+                        <i class="fas fa-comment-dots text-lg"></i>
+                        <span>Kết Nối Zalo</span>
+                    </a>
 
-            <!-- Hồ Sơ Độc Quyền (PDF) -->
-            <div>
-                <div class="flex flex-col sm:flex-row items-center justify-between max-w-3xl mx-auto mb-4 gap-2">
-                    <h3 class="font-luxury text-gold-300 uppercase tracking-[0.2em] text-sm font-bold flex items-center gap-2">
-                        <i class="fas fa-file-signature text-gold-400"></i>
-                        Hồ Sơ Năng Lực Cấp Cao
-                    </h3>
-                    <!-- CHỦ TỊCH THAY LINK PDF TRỰC TIẾP VÀO ĐÂY ĐỂ MỞ TAB MỚI TRÊN MOBILE -->
-                    <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" class="text-xs text-gold-400 hover:text-gold-200 underline underline-offset-4 flex items-center gap-1.5 transition">
-                        <span>Mở toàn màn hình</span>
-                        <i class="fas fa-external-link-alt text-[10px]"></i>
+                    <button onclick="copyPhone('099999999')" class="btn-gold-outline w-full sm:w-auto px-6 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-gold-200 text-sm sm:text-base font-medium cursor-pointer">
+                        <i class="far fa-copy text-cyan-400"></i>
+                        <span>0999.999.99</span>
+                    </button>
+                    
+                    <!-- CHỦ TỊCH THAY LINK FACEBOOK VÀO THUỘC TÍNH HREF DƯỚI ĐÂY KHI CÓ -->
+                    <a href="#" target="_blank" id="fb-link" class="btn-gold-outline w-full sm:w-auto px-7 py-3.5 rounded-full flex items-center justify-center gap-2.5 text-gold-200 text-sm sm:text-base font-medium cursor-pointer" onclick="event.preventDefault(); showMsg('Vui lòng cập nhật đường dẫn Facebook của Chủ Tịch vào thẻ #fb-link!')">
+                        <i class="fab fa-facebook-f text-gold-400"></i>
+                        <span>Facebook Chí Tôn</span>
                     </a>
                 </div>
 
-                <div class="w-full max-w-3xl mx-auto h-[420px] sm:h-[500px] border border-gold-500/30 rounded-2xl overflow-hidden bg-black/80 shadow-[0_0_25px_rgba(0,0,0,0.6)]">
-                    <!-- CHỦ TỊCH THAY LINK PDF VÀO PHÍA SAU ĐOẠN 'url=' CỦA THUỘC TÍNH SRC DƯỚI ĐÂY -->
-                    <iframe src="https://docs.google.com/viewer?url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" class="w-full h-full" frameborder="0" loading="lazy"></iframe>
-                </div>
-            </div>
-
-            <div class="divider-gold my-10"></div>
-
-            <!-- =========================================================================
-                 [VỊ TRÍ 2: MÃ QR CHUYỂN TIỀN]
-                 - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px, nên cắt gọn viền mã QR để dễ quét).
-                 - Cách tải lên GitHub: Tải ảnh vào thư mục "images" với tên "qr-chuyen-tien.png"
-                   (Lưu ý: Viết thường không dấu, đúng đuôi file .png hoặc .jpg).
-            ========================================================================== -->
-            <div>
-                <h3 class="font-luxury text-gold-300 mb-2 uppercase tracking-[0.2em] text-sm font-bold">
-                    Cổng Giao Dịch Đặc Quyền
-                </h3>
-                <p class="text-gray-400 text-xs mb-6">Quét mã QR bằng ứng dụng Ngân hàng hoặc Ví điện tử</p>
-
-                <div class="inline-flex flex-col items-center p-4 rounded-2xl bg-gradient-to-b from-gold-500/15 to-black/90 border border-gold-500/40 animate-pulse-glow">
-                    <!-- Khung vuông 1:1 chuẩn cho mã QR -->
-                    <div class="w-52 h-52 sm:w-56 sm:h-56 bg-white/95 p-2.5 rounded-xl overflow-hidden flex items-center justify-center shadow-inner">
-                        <img 
-                            src="images/qr-chuyen-tien.png" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/400x400/121212/EAB308?text=QR+Chuyen+Tien';" 
-                            alt="Mã QR Chuyển Tiền Võ Minh Nhật" 
-                            class="w-full h-full object-contain rounded-lg"
-                        >
+                <!-- Power Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12 text-left">
+                    <div class="glass-subpanel p-6 rounded-2xl relative overflow-hidden">
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-500/25 via-pink-500/15 to-cyan-500/20 flex items-center justify-center text-gold-300 text-lg border border-gold-400/40 shrink-0">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="font-luxury text-lg sm:text-xl font-bold text-gold-200">Năng Lực Chí Tôn</h3>
+                        </div>
+                        <p class="text-gray-300/90 text-sm leading-relaxed">
+                            Thấu hiểu vạn vật. Thông thạo tất cả mọi kỹ năng trên cuộc đời này đạt đến cảnh giới <strong class="text-gold-300">Chí Tôn</strong> chỉ sau đúng 24 tiếng đồng hồ.
+                        </p>
                     </div>
-                    <div class="mt-3.5 flex items-center gap-2 text-gold-300 text-xs font-semibold uppercase tracking-widest">
-                        <i class="fas fa-qrcode text-gold-400"></i>
-                        <span>Chủ TK: VÕ MINH NHẬT</span>
+
+                    <div class="glass-subpanel p-6 rounded-2xl relative overflow-hidden">
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/25 via-purple-500/15 to-gold-500/20 flex items-center justify-center text-cyan-300 text-lg border border-cyan-400/40 shrink-0">
+                                <i class="fas fa-globe-asia"></i>
+                            </div>
+                            <h3 class="font-luxury text-lg sm:text-xl font-bold text-gold-200">Ngôn Ngữ Toàn Cầu</h3>
+                        </div>
+                        <p class="text-gray-300/90 text-sm leading-relaxed">
+                            Làm chủ và giao tiếp trôi chảy <strong class="text-cyan-300">135 ngôn ngữ</strong> khác nhau, bao phủ toàn diện <strong class="text-gold-300">185 quốc gia và vùng lãnh thổ</strong>.
+                        </p>
                     </div>
                 </div>
-            </div>
 
+                <div class="divider-rainbow my-10"></div>
+
+                <!-- Hồ Sơ Độc Quyền (PDF) -->
+                <div>
+                    <div class="flex flex-col sm:flex-row items-center justify-between max-w-3xl mx-auto mb-4 gap-2">
+                        <h3 class="font-luxury text-gold-300 uppercase tracking-[0.2em] text-sm font-bold flex items-center gap-2">
+                            <i class="fas fa-file-signature text-cyan-400"></i>
+                            Hồ Sơ Năng Lực Cấp Cao
+                        </h3>
+                        <!-- CHỦ TỊCH THAY LINK PDF TRỰC TIẾP VÀO ĐÂY ĐỂ MỞ TAB MỚI TRÊN MOBILE -->
+                        <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" class="text-xs text-cyan-300 hover:text-gold-300 underline underline-offset-4 flex items-center gap-1.5 transition">
+                            <span>Mở toàn màn hình</span>
+                            <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <div class="w-full max-w-3xl mx-auto h-[420px] sm:h-[500px] border border-gold-500/35 rounded-2xl overflow-hidden bg-black/80 shadow-[0_0_25px_rgba(0,0,0,0.7)]">
+                        <!-- CHỦ TỊCH THAY LINK PDF VÀO PHÍA SAU ĐOẠN 'url=' CỦA THUỘC TÍNH SRC DƯỚI ĐÂY -->
+                        <iframe src="https://docs.google.com/viewer?url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" class="w-full h-full" frameborder="0" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+                <div class="divider-rainbow my-10"></div>
+
+                <!-- =========================================================================
+                     [VỊ TRÍ 2: MÃ QR CHUYỂN TIỀN]
+                     - Tỷ lệ khuyên dùng: Ảnh vuông 1:1 (ví dụ: 400x400px, nên cắt gọn viền mã QR để dễ quét).
+                     - Cách tải lên GitHub: Tải ảnh vào thư mục "images" với tên "qr-chuyen-tien.png"
+                       (Lưu ý: Viết thường không dấu, đúng đuôi file .png hoặc .jpg).
+                ========================================================================== -->
+                <div>
+                    <h3 class="font-luxury text-gold-300 mb-2 uppercase tracking-[0.2em] text-sm font-bold">
+                        Cổng Giao Dịch Đặc Quyền
+                    </h3>
+                    <p class="text-gray-400 text-xs mb-6">Quét mã QR bằng ứng dụng Ngân hàng hoặc Ví điện tử</p>
+
+                    <div class="inline-flex flex-col items-center p-4 rounded-2xl bg-gradient-to-b from-gold-500/15 via-cyan-500/10 to-black/90 border border-gold-400/50 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+                        <div class="w-52 h-52 sm:w-56 sm:h-56 bg-white/95 p-2.5 rounded-xl overflow-hidden flex items-center justify-center shadow-inner">
+                            <img 
+                                src="images/qr-chuyen-tien.png" 
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x400/121212/EAB308?text=QR+Chuyen+Tien';" 
+                                alt="Mã QR Chuyển Tiền Võ Minh Nhật" 
+                                class="w-full h-full object-contain rounded-lg"
+                            >
+                        </div>
+                        <div class="mt-3.5 flex items-center gap-2 text-gold-300 text-xs font-semibold uppercase tracking-widest">
+                            <i class="fas fa-qrcode text-cyan-400"></i>
+                            <span>Chủ TK: VÕ MINH NHẬT</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <!-- Footer -->
         <footer class="mt-10 text-center text-gray-500 text-xs sm:text-sm">
-            <p>&copy; 2026 Bản quyền thuộc về <span class="text-gold-500/80 font-medium">Tập Đoàn Võ Thị</span>. Mọi sự sao chép đều phải trả giá.</p>
+            <p>&copy; 2026 Bản quyền thuộc về <span class="text-gold-400 font-medium">Tập Đoàn Võ Thị</span>. Mọi sự sao chép đều phải trả giá.</p>
         </footer>
 
         <!-- Custom Alert Modal -->
         <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeMsg()">
-            <div class="glass-card p-7 rounded-2xl max-w-sm w-full mx-4 border-gold-500/50 text-center transform scale-95 transition-transform duration-300" id="modal-content" onclick="event.stopPropagation()">
-                <div class="w-12 h-12 rounded-full bg-gold-500/15 border border-gold-500/40 flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-crown text-xl text-gold-400"></i>
+            <div class="glass-card p-7 rounded-2xl max-w-sm w-full mx-4 border-gold-500/60 text-center transform scale-95 transition-transform duration-300" id="modal-content" onclick="event.stopPropagation()">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold-500/20 to-cyan-500/20 border border-gold-400/50 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-khanda text-xl text-gold-400"></i>
                 </div>
                 <p id="modal-text" class="text-gray-200 text-sm leading-relaxed mb-6 font-medium"></p>
                 <button onclick="closeMsg()" class="btn-gold-primary px-6 py-2.5 rounded-full text-sm w-full cursor-pointer">Đã rõ thưa Chủ Tịch</button>
@@ -357,8 +478,28 @@
 
     </main>
 
-    <!-- Three.js Bling Bling Animation & UI Logic -->
+    <!-- Logic Kiếm Thánh, Hào Quang 7 Sắc & Three.js -->
     <script>
+        // 1. Nút Ẩn / Bật Bá Khí
+        let auraActive = true;
+        function toggleAura() {
+            auraActive = !auraActive;
+            const body = document.body;
+            const label = document.getElementById('aura-label');
+            const icon = document.getElementById('aura-icon');
+
+            if (auraActive) {
+                body.classList.remove('aura-hidden');
+                label.innerText = 'Bá Khí: BẬT';
+                icon.className = 'fas fa-khanda text-cyan-400';
+            } else {
+                body.classList.add('aura-hidden');
+                label.innerText = 'Bá Khí: ẨN';
+                icon.className = 'fas fa-eye-slash text-gray-400';
+            }
+        }
+
+        // 2. Modal & Sao chép SĐT
         const modal = document.getElementById('custom-modal');
         const modalText = document.getElementById('modal-text');
         const modalContent = document.getElementById('modal-content');
@@ -384,7 +525,64 @@
             });
         }
 
-        // Three.js Setup
+        // 3. Hiệu ứng Vệt Kiếm Thánh 7 Sắc Cầu Vồng theo con trỏ chuột / chạm
+        const trailCanvas = document.getElementById('sword-trail-canvas');
+        const tCtx = trailCanvas.getContext('2d');
+        let trailPoints = [];
+
+        function resizeTrailCanvas() {
+            trailCanvas.width = window.innerWidth;
+            trailCanvas.height = window.innerHeight;
+        }
+        resizeTrailCanvas();
+        window.addEventListener('resize', resizeTrailCanvas);
+
+        function addTrailPoint(x, y) {
+            if (!auraActive) return;
+            trailPoints.push({
+                x: x,
+                y: y,
+                age: 0,
+                hue: (Date.now() * 0.35) % 360
+            });
+        }
+
+        window.addEventListener('mousemove', (e) => addTrailPoint(e.clientX, e.clientY));
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                addTrailPoint(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        function renderSwordTrail() {
+            tCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+            if (auraActive && trailPoints.length > 1) {
+                for (let i = 1; i < trailPoints.length; i++) {
+                    const p1 = trailPoints[i - 1];
+                    const p2 = trailPoints[i];
+                    const life = 1 - p2.age / 22;
+                    if (life <= 0) continue;
+
+                    tCtx.beginPath();
+                    tCtx.moveTo(p1.x, p1.y);
+                    tCtx.lineTo(p2.x, p2.y);
+                    tCtx.strokeStyle = `hsla(${p2.hue}, 100%, 65%, ${life * 0.85})`;
+                    tCtx.lineWidth = life * 6;
+                    tCtx.lineCap = 'round';
+                    tCtx.shadowBlur = 14;
+                    tCtx.shadowColor = `hsla(${p2.hue}, 100%, 60%, 0.9)`;
+                    tCtx.stroke();
+                }
+            }
+
+            trailPoints.forEach(p => p.age++);
+            trailPoints = trailPoints.filter(p => p.age < 22);
+            requestAnimationFrame(renderSwordTrail);
+        }
+        renderSwordTrail();
+
+        // 4. Three.js Kiếm Quang 7 Sắc & Bụi Vàng 3D
         window.onload = function() {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
@@ -394,24 +592,49 @@
 
             const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Tối ưu hiệu năng cho màn hình Retina/Mobile
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
             const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 650;
+            const particlesCount = 750;
             const posArray = new Float32Array(particlesCount * 3);
+            const colorArray = new Float32Array(particlesCount * 3);
 
-            for(let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 200;
+            // Bảng màu 7 sắc cầu vồng + Vàng kim Chí Tôn
+            const rainbowPalette = [
+                new THREE.Color(0xFFD700), // Vàng kim
+                new THREE.Color(0xFF2A5F), // Đỏ hồng
+                new THREE.Color(0xFF8C00), // Cam
+                new THREE.Color(0xFFE600), // Vàng sáng
+                new THREE.Color(0x00E676), // Lục bảo
+                new THREE.Color(0x00E5FF), // Lam ngọc
+                new THREE.Color(0x3D5AFE), // Chàm
+                new THREE.Color(0xD500F9)  // Tím
+            ];
+
+            for (let i = 0; i < particlesCount; i++) {
+                posArray[i * 3] = (Math.random() - 0.5) * 200;
+                posArray[i * 3 + 1] = (Math.random() - 0.5) * 200;
+                posArray[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+                // 40% hạt màu vàng kim chủ đạo, 60% hạt 7 sắc cầu vồng
+                const chosenColor = Math.random() < 0.4 
+                    ? rainbowPalette[0] 
+                    : rainbowPalette[Math.floor(Math.random() * rainbowPalette.length)];
+
+                colorArray[i * 3] = chosenColor.r;
+                colorArray[i * 3 + 1] = chosenColor.g;
+                colorArray[i * 3 + 2] = chosenColor.b;
             }
 
             particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
             const material = new THREE.PointsMaterial({
-                size: 0.32,
-                color: 0xEAB308,
+                size: 0.42,
+                vertexColors: true,
                 transparent: true,
-                opacity: 0.75,
+                opacity: 0.85,
                 blending: THREE.AdditiveBlending
             });
 
@@ -438,8 +661,8 @@
 
                 const elapsedTime = clock.getElapsedTime();
 
-                particlesMesh.rotation.y = -0.04 * elapsedTime;
-                particlesMesh.rotation.x = -0.015 * elapsedTime;
+                particlesMesh.rotation.y = -0.05 * elapsedTime;
+                particlesMesh.rotation.x = -0.02 * elapsedTime;
 
                 targetX = mouseX * 0.0008;
                 targetY = mouseY * 0.0008;
